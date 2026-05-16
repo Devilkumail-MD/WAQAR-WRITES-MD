@@ -1,22 +1,26 @@
-const ytdl = (() => { try { return require('@distube/ytdl-core'); } catch(_) { try { return require('ytdl-core'); } catch(_) { return null; } } })();
+const dl = require('../../utils/downloaders');
+const config = require('../../config');
+
 module.exports = {
-  name: 'ytmp3', aliases: [], category: 'downloader',
+  name: 'ytmp3', aliases: ['yta'], category: 'downloader',
   description: 'Download YouTube audio (MP3)',
-  usage: '.ytmp3 <youtube url>',
+  usage: '.ytmp3 <youtube url or song name>',
   async execute(sock, msg, args, extra) {
-    const url = args[0];
-    if (!url || !/youtu/.test(url)) return extra.reply('Usage: .ytmp3 <youtube url>');
-    if (!ytdl) return extra.reply('❌ ytdl-core not installed.');
+    const q = args.join(' ').trim();
+    if (!q) return extra.reply('Usage: .ytmp3 <youtube url or song name>');
+    const chatId = msg.key.remoteJid;
     try {
-      const info = await ytdl.getInfo(url);
-      await extra.reply('🎵 ' + info.videoDetails.title);
-      const stream = ytdl(url, { filter:'audioonly', quality:'highestaudio' });
-      const chunks = [];
-      stream.on('data', c => chunks.push(c));
-      stream.on('end', async () => {
-        await sock.sendMessage(extra.from, { audio: Buffer.concat(chunks), mimetype:'audio/mpeg' }, { quoted: msg });
-      });
-      stream.on('error', e => extra.reply('❌ ' + e.message));
-    } catch (e) { extra.reply('❌ ' + e.message); }
-  }
+      await sock.sendMessage(chatId, { react: { text: '⏳', key: msg.key } });
+      const r = await dl.ytAudio(q);
+      const caption = `*${r.title}*\n${r.duration ? '⏱ ' + r.duration : ''}\n\n_Downloaded by ${config.botName}_`;
+      if (r.thumbnail) {
+        try { await sock.sendMessage(chatId, { image: { url: r.thumbnail }, caption }, { quoted: msg }); } catch {}
+      }
+      await sock.sendMessage(chatId, { audio: r.buffer, mimetype: 'audio/mpeg', fileName: `${r.title}.mp3`.replace(/[^\w.\- ]/g,'') }, { quoted: msg });
+      await sock.sendMessage(chatId, { react: { text: '✅', key: msg.key } });
+    } catch (e) {
+      await sock.sendMessage(chatId, { react: { text: '❌', key: msg.key } });
+      extra.reply('❌ ' + (e.message || 'YouTube download failed'));
+    }
+  },
 };

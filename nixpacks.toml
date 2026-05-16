@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "ffmpeg-full", "imagemagick", "python3", "pkg-config", "vips"]
+nixPkgs = ["nodejs_20", "ffmpeg-full", "imagemagick", "python3", "pkg-config", "vips", "yt-dlp"]
 
 [phases.install]
 cmds = [

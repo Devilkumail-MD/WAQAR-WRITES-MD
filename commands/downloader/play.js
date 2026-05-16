@@ -1,26 +1,26 @@
-const yts = (() => { try { return require('yt-search'); } catch(_) { return null; } })();
-const ytdl = (() => { try { return require('@distube/ytdl-core'); } catch(_) { try { return require('ytdl-core'); } catch(_) { return null; } } })();
+const dl = require('../../utils/downloaders');
+const config = require('../../config');
+
 module.exports = {
-  name: 'play', aliases: ['song','songs'], category: 'downloader',
+  name: 'play', aliases: ['song', 'songs', 'music'], category: 'downloader',
   description: 'Search YouTube and send the audio',
   usage: '.play <song name>',
   async execute(sock, msg, args, extra) {
-    const q = args.join(' ');
+    const q = args.join(' ').trim();
     if (!q) return extra.reply('Usage: .play despacito');
-    if (!yts || !ytdl) return extra.reply('❌ Required modules missing.');
+    const chatId = msg.key.remoteJid;
     try {
-      const r = await yts(q);
-      const v = r.videos?.[0];
-      if (!v) return extra.reply('❌ No results.');
-      await extra.reply('🎵 Downloading: ' + v.title + ' (' + v.timestamp + ')\n🔗 ' + v.url);
-      const stream = ytdl(v.url, { filter: 'audioonly', quality: 'highestaudio' });
-      const chunks = [];
-      stream.on('data', c => chunks.push(c));
-      stream.on('end', async () => {
-        const buf = Buffer.concat(chunks);
-        await sock.sendMessage(extra.from, { audio: buf, mimetype: 'audio/mpeg' }, { quoted: msg });
-      });
-      stream.on('error', e => extra.reply('❌ ' + e.message));
-    } catch (e) { extra.reply('❌ ' + e.message); }
-  }
+      await sock.sendMessage(chatId, { react: { text: '🎵', key: msg.key } });
+      const r = await dl.ytAudio(q);
+      const caption = `*${r.title}*\n${r.duration ? '⏱ ' + r.duration : ''}\n\n_Downloaded by ${config.botName}_`;
+      if (r.thumbnail) {
+        try { await sock.sendMessage(chatId, { image: { url: r.thumbnail }, caption }, { quoted: msg }); } catch {}
+      }
+      await sock.sendMessage(chatId, { audio: r.buffer, mimetype: 'audio/mpeg', fileName: `${r.title}.mp3`.replace(/[^\w.\- ]/g,'') }, { quoted: msg });
+      await sock.sendMessage(chatId, { react: { text: '✅', key: msg.key } });
+    } catch (e) {
+      await sock.sendMessage(chatId, { react: { text: '❌', key: msg.key } });
+      extra.reply('❌ ' + (e.message || 'Play failed'));
+    }
+  },
 };
