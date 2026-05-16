@@ -1,0 +1,9 @@
+node_modules/
+session/
+temp/
+.env
+.env.local
+*.log
+.DS_Store
+.replit
+.cache/

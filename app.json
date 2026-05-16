@@ -1,0 +1,26 @@
+{
+  "name": "𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫",
+  "description": "WhatsApp MD-style multi-command bot (Baileys v7) — 260+ commands, AI chatbot, anime reactions, downloaders, group tools and more.",
+  "logo": "https://raw.githubusercontent.com/whiskeysockets/Baileys/master/Media/logo.png",
+  "keywords": ["whatsapp", "baileys", "bot", "md", "node", "waqar-writes"],
+  "repository": "https://github.com/your-username/waqar-writes-md",
+  "stack": "container",
+  "formation": {
+    "worker": { "quantity": 1, "size": "eco" }
+  },
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git" }
+  ],
+  "env": {
+    "SESSION_ID": {
+      "description": "KnightBot session string (starts with 'KnightBot!') — pair your number at the KnightBot site and paste the full string here.",
+      "required": true
+    },
+    "PREFIX": {
+      "description": "Command prefix (default '.')",
+      "value": ".",
+      "required": false
+    }
+  }
+}

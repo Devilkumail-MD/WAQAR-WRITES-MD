@@ -1,0 +1,10 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "ffmpeg-full", "imagemagick", "python3", "pkg-config", "vips"]
+
+[phases.install]
+cmds = [
+  "npm install --omit=dev --no-audit --no-fund --legacy-peer-deps"
+]
+
+[start]
+cmd = "node index.js"
