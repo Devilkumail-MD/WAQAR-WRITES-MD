@@ -102,11 +102,13 @@ const getCachedGroupMetadata = async (sock, groupId) => {
 const LIVE_TTL_MS = 30 * 1000; // 30s
 const liveMetaInflight = new Map(); // dedupe concurrent fetches per group
 
-const getLiveGroupMetadata = async (sock, groupId) => {
-  // Serve from cache if fresh
-  const cached = groupMetadataCache.get(groupId);
-  if (cached && Date.now() - cached.timestamp < LIVE_TTL_MS) {
-    return cached.data;
+const getLiveGroupMetadata = async (sock, groupId, { forceLive = false } = {}) => {
+  // Serve from cache if fresh AND caller didn't ask for live
+  if (!forceLive) {
+    const cached = groupMetadataCache.get(groupId);
+    if (cached && Date.now() - cached.timestamp < LIVE_TTL_MS) {
+      return cached.data;
+    }
   }
   // Dedupe parallel fetches for the same group
   if (liveMetaInflight.has(groupId)) {
@@ -924,13 +926,17 @@ const handleMessage = async (sock, msg) => {
       return sock.sendMessage(from, { text: config.messages.privateOnly }, { quoted: msg });
     }
     
-    if (command.adminOnly && !(await isAdmin(sock, sender, from, groupMetadata)) && !isOwner(sender)) {
-      return sock.sendMessage(from, { text: config.messages.adminOnly }, { quoted: msg });
+    // Permission gates use FORCE-LIVE metadata (never stale) for correct authorization
+    if (command.adminOnly && !isOwner(sender)) {
+      const liveMeta = isGroup ? await getLiveGroupMetadata(sock, from, { forceLive: true }) : null;
+      if (!(await isAdmin(sock, sender, from, liveMeta))) {
+        return sock.sendMessage(from, { text: config.messages.adminOnly }, { quoted: msg });
+      }
     }
     
     if (command.botAdminNeeded) {
-      const botIsAdmin = await isBotAdmin(sock, from, groupMetadata);
-      if (!botIsAdmin) {
+      const liveMeta = isGroup ? await getLiveGroupMetadata(sock, from, { forceLive: true }) : null;
+      if (!(await isBotAdmin(sock, from, liveMeta))) {
         return sock.sendMessage(from, { text: config.messages.botAdminNeeded }, { quoted: msg });
       }
     }
