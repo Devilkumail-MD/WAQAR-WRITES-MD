@@ -927,13 +927,19 @@ const handleMessage = async (sock, msg) => {
       }
     }
     
-    // Auto-typing
+    // Auto-typing (fire-and-forget — saves ~150-300ms RTT per command)
     if (config.autoTyping) {
-      await sock.sendPresenceUpdate('composing', from);
+      sock.sendPresenceUpdate('composing', from).catch(() => {});
     }
     
     // Execute command
     console.log(`Executing command: ${commandName} from ${sender}`);
+    
+    // Parallelize admin checks (one Promise.all instead of two sequential awaits)
+    const [ctxIsAdmin, ctxIsBotAdmin] = await Promise.all([
+      isAdmin(sock, sender, from, groupMetadata),
+      isBotAdmin(sock, from, groupMetadata)
+    ]);
     
     await command.execute(sock, msg, args, {
       from,
@@ -941,8 +947,8 @@ const handleMessage = async (sock, msg) => {
       isGroup,
       groupMetadata,
       isOwner: isOwner(sender),
-      isAdmin: await isAdmin(sock, sender, from, groupMetadata),
-      isBotAdmin: await isBotAdmin(sock, from, groupMetadata),
+      isAdmin: ctxIsAdmin,
+      isBotAdmin: ctxIsBotAdmin,
       isMod: isMod(sender),
       reply: (text) => sock.sendMessage(from, { text }, { quoted: msg }),
       react: (emoji) => sock.sendMessage(from, { react: { text: emoji, key: msg.key } })
