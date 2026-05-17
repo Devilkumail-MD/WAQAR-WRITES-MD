@@ -55,36 +55,31 @@ Prefix: <code>.</code> &nbsp;|&nbsp; Node.js 20+ &nbsp;|&nbsp; 290+ commands
 
 ## 🔑 Environment Variables
 
-### ✅ REQUIRED (bot won't start without this)
+These are the **only** variables the bot reads. Anything else is unused — don't add extra junk.
+
+### ✅ REQUIRED
 
 | Variable | Description | Example |
 |---|---|---|
 | `SESSION_ID` | Your WAQAR WRITES session string. Pair your number at the session generator and paste the **full** string. | `WAQAR-WRITES~ABC123xyz...` |
 
-### 🟡 RECOMMENDED
+### 🟡 RECOMMENDED (set on every host)
 
-| Variable | What it enables | Default |
+| Variable | What it does | Value |
 |---|---|---|
-| `NODE_ENV` | Set to `production` on Railway/Heroku for cleaner logs and better performance | `development` |
-| `SESSION_GEN_URL` | Override the session-generator URL (only if you self-host the generator) | `https://waqar-writes-md.replit.app/session/` |
+| `NODE_ENV` | Cleaner logs + better performance in production | `production` |
 
-### 🔵 OPTIONAL (unlocks AI features)
+### 🔵 OPTIONAL — only add if you want that feature
 
 | Variable | Enables | How to get |
 |---|---|---|
-| `GEMINI_API_KEY` | `.gemini` AI chat command | [ai.google.dev](https://ai.google.dev) (free tier) |
-| `OPENAI_API_KEY` | OpenAI chat / DALL-E | [platform.openai.com](https://platform.openai.com) |
+| `GEMINI_API_KEY` | `.gemini` AI chat | [ai.google.dev](https://ai.google.dev) (free tier) |
+| `OPENAI_API_KEY` | `.gpt` AI chat | [platform.openai.com](https://platform.openai.com) |
+| `SESSION_GEN_URL` | Custom session-generator URL (only if you self-host it) | default: `https://waqar-writes-md.replit.app/session/` |
+| `UPDATE_ZIP_URL` | Source ZIP for the `.update` owner command | default: GitHub repo |
+| `YTDLP_BIN` | Custom path to `yt-dlp` binary for `.song` / `.video` | default: `yt-dlp` (auto-detect) |
 
-### 🟤 ADVANCED (rarely needed)
-
-| Variable | Purpose | Default |
-|---|---|---|
-| `PORT` | HTTP port (only if you add a healthcheck server) | none |
-| `YTDLP_BIN` | Custom yt-dlp binary path for `.song` / `.video` | auto-detect |
-| `PUPPETEER_SKIP_DOWNLOAD` | Skip Chromium download (saves space on free tiers) | `false` |
-| `UPDATE_ZIP_URL` | Source ZIP for the `.update` command | GitHub repo |
-
-> **Owner numbers** are hard-coded in `whatsapp-bot/config.js` — **not** env vars. Edit the file and redeploy to change them.
+> **Owner numbers** are hard-coded in `whatsapp-bot/config.js` — **not** env vars. Edit that file and redeploy to change them.
 
 ---
 
