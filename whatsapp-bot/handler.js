@@ -927,9 +927,13 @@ const handleMessage = async (sock, msg) => {
       }
     }
     
-    // Auto-typing (fire-and-forget — saves ~150-300ms RTT per command)
+    // Auto-typing: bounded wait so typing shows up before reply, but capped to
+    // 150ms to avoid blocking the command on a slow presence RTT.
     if (config.autoTyping) {
-      sock.sendPresenceUpdate('composing', from).catch(() => {});
+      await Promise.race([
+        sock.sendPresenceUpdate('composing', from).catch(() => {}),
+        new Promise(resolve => setTimeout(resolve, 150))
+      ]);
     }
     
     // Execute command
