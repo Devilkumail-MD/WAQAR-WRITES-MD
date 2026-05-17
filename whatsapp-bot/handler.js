@@ -428,9 +428,16 @@ const handleRevoke = async (sock, revokeMsg, deletedKey) => {
       ['stickerMessage',  'sticker'],
       ['documentMessage', 'document'],
     ];
+    const MAX_MEDIA_BYTES = 50 * 1024 * 1024; // 50MB hard cap to avoid OOM
     for (const [key, kind] of mediaTypes) {
       if (content[key]) {
         try {
+          const sz = Number(content[key].fileLength || 0);
+          if (sz > MAX_MEDIA_BYTES) {
+            await sock.sendMessage(target, { text: `${header}\n\n_[deleted ${kind} too large to recover (${Math.round(sz / 1048576)}MB)]_`, mentions });
+            messageStore.remove(chatJid, deletedKey.id);
+            return;
+          }
           const buffer = await downloadMediaMessage(
             { key: cached.key, message: original },
             'buffer',
@@ -453,6 +460,7 @@ const handleRevoke = async (sock, revokeMsg, deletedKey) => {
           return;
         } catch (e) {
           await sock.sendMessage(target, { text: `${header}\n\n_[deleted ${kind} could not be recovered]_`, mentions });
+          messageStore.remove(chatJid, deletedKey.id);
           return;
         }
       }
@@ -460,6 +468,7 @@ const handleRevoke = async (sock, revokeMsg, deletedKey) => {
 
     // Fallback: unknown type
     await sock.sendMessage(target, { text: `${header}\n\n_[deleted message of unknown type]_`, mentions });
+    messageStore.remove(chatJid, deletedKey.id);
   } catch (err) {
     console.error('[antidelete] handleRevoke error:', err.message);
   }
