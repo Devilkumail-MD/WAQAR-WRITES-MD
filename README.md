@@ -47,7 +47,7 @@ Prefix: <code>.</code> &nbsp;|&nbsp; Node.js 20+ &nbsp;|&nbsp; 290+ commands
 
 <p align="center">
   <a href="#-deploy-to-railway-recommended"><img src="https://img.shields.io/badge/-DEPLOY%20NOW-00c6ff?style=for-the-badge&logoColor=white" alt="deploy" /></a>
-  <a href="#-getting-a-session_id"><img src="https://img.shields.io/badge/-GET%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="session" /></a>
+  <a href="https://waqar-writes-md.replit.app/session/"><img src="https://img.shields.io/badge/-GET%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="session" /></a>
   <a href="#-common-issues"><img src="https://img.shields.io/badge/-TROUBLESHOOT-ff0080?style=for-the-badge&logoColor=white" alt="trouble" /></a>
 </p>
 
