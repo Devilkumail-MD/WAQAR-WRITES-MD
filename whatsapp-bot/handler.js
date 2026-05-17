@@ -97,27 +97,35 @@ const getCachedGroupMetadata = async (sock, groupId) => {
   }
 };
 
-// Live group metadata getter (always fresh, no cache) - for admin checks
+// Short-TTL cache for admin checks (admin status rarely changes second-to-second).
+// Trade-off: up to LIVE_TTL_MS staleness vs ~200-400ms saved per command in groups.
+const LIVE_TTL_MS = 30 * 1000; // 30s
+const liveMetaInflight = new Map(); // dedupe concurrent fetches per group
+
 const getLiveGroupMetadata = async (sock, groupId) => {
-  try {
-    // Always fetch fresh metadata, bypass cache
-    const metadata = await sock.groupMetadata(groupId);
-    
-    // Update cache for other features (antilink, welcome, etc.)
-    groupMetadataCache.set(groupId, {
-      data: metadata,
-      timestamp: Date.now()
-    });
-    
-    return metadata;
-  } catch (error) {
-    // On error, try cached data as fallback
-    const cached = groupMetadataCache.get(groupId);
-    if (cached) {
-      return cached.data;
-    }
-    return null;
+  // Serve from cache if fresh
+  const cached = groupMetadataCache.get(groupId);
+  if (cached && Date.now() - cached.timestamp < LIVE_TTL_MS) {
+    return cached.data;
   }
+  // Dedupe parallel fetches for the same group
+  if (liveMetaInflight.has(groupId)) {
+    return liveMetaInflight.get(groupId);
+  }
+  const p = (async () => {
+    try {
+      const metadata = await sock.groupMetadata(groupId);
+      groupMetadataCache.set(groupId, { data: metadata, timestamp: Date.now() });
+      return metadata;
+    } catch (error) {
+      const fb = groupMetadataCache.get(groupId);
+      return fb ? fb.data : null;
+    } finally {
+      liveMetaInflight.delete(groupId);
+    }
+  })();
+  liveMetaInflight.set(groupId, p);
+  return p;
 };
 
 // Alias for backward compatibility (non-admin features use cached)
@@ -936,14 +944,20 @@ const handleMessage = async (sock, msg) => {
       ]);
     }
     
-    // Execute command
-    console.log(`Executing command: ${commandName} from ${sender}`);
-    
-    // Parallelize admin checks (one Promise.all instead of two sequential awaits)
-    const [ctxIsAdmin, ctxIsBotAdmin] = await Promise.all([
-      isAdmin(sock, sender, from, groupMetadata),
-      isBotAdmin(sock, from, groupMetadata)
-    ]);
+    // Skip eager admin checks when not needed (saves ~200-400ms per command in groups).
+    // Only compute when the command declares it cares (adminOnly / botAdminNeeded /
+    // needsAdminCtx). Otherwise default to false — most commands (.ping, .menu, .alive,
+    // sticker, downloaders, etc.) never read these flags.
+    const needsAdminCtx = isGroup && (
+      command.adminOnly || command.botAdminNeeded || command.needsAdminCtx
+    );
+    let ctxIsAdmin = false, ctxIsBotAdmin = false;
+    if (needsAdminCtx) {
+      [ctxIsAdmin, ctxIsBotAdmin] = await Promise.all([
+        isAdmin(sock, sender, from, groupMetadata),
+        isBotAdmin(sock, from, groupMetadata)
+      ]);
+    }
     
     await command.execute(sock, msg, args, {
       from,
