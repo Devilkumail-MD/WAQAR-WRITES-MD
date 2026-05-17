@@ -83,6 +83,95 @@ These are the **only** variables the bot reads. Anything else is unused — don'
 
 ---
 
+## ⚙️ `whatsapp-bot/config.js` — All Settings
+
+Anything that is **not** an env variable lives in [`whatsapp-bot/config.js`](./whatsapp-bot/config.js). Edit the file, commit, push → Railway redeploys automatically.
+
+### 👑 Identity
+
+| Key | Current value | What it does |
+|---|---|---|
+| `ownerNumber` | `['923375626980','447520643901']` | Owner numbers (no `+`, no spaces). Both get the startup DM and owner-only commands. |
+| `ownerName` | `['𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫', '𝙳𝙴𝚅𝙸𝙻 𝚇']` | Display names for each owner (same order as `ownerNumber`). |
+| `botName` | `𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫` | Bot name shown in menus / replies. |
+| `prefix` | `.` | Command prefix. Change to `!`, `/`, `#`, etc. if you want. |
+| `sessionName` | `session` | Local session folder name. |
+| `packname` | `𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫` | Sticker pack name (shown in WhatsApp sticker info). |
+| `timezone` | `Asia/Karachi` | Timezone for `.time`, logs, and timestamps. |
+| `maxWarnings` | `3` | Warnings before a user gets actioned (antilink/antitag etc). |
+
+### 🔗 Links
+
+| Key | Default | What it does |
+|---|---|---|
+| `sessionGenUrl` | `https://waqar-writes-md.replit.app/session/` | Session generator URL. Env `SESSION_GEN_URL` overrides this. |
+| `updateZipUrl` | `https://github.com` | ZIP source for `.update`. Env `UPDATE_ZIP_URL` overrides this. |
+| `newsletterJid` | `120363424512151830@newsletter` | WhatsApp channel JID used for menu forwarding. |
+| `social.github` | `https://github.com` | Shown in `.owner` / `.info`. |
+| `social.instagram` | `https://instagram.com` | Shown in `.owner` / `.info`. |
+| `social.youtube` | `http://youtube.com/@devilxofficial_hackers` | Shown in `.owner` / `.info`. |
+
+### 🤖 Bot Behavior (toggles, default = OFF)
+
+| Key | What happens when `true` |
+|---|---|
+| `selfMode` | Private mode — **only owners** can use commands. |
+| `autoRead` | Bot auto-reads every message. |
+| `autoTyping` | Shows "typing…" before replying. |
+| `autoBio` | Auto-updates bot's WhatsApp bio. |
+| `autoSticker` | Auto-converts every image/video sent to bot into a sticker. |
+| `autoReact` | Bot auto-reacts to messages with emojis. |
+| `autoReactMode` | `'bot'` = bot's own messages, `'all'` = everyone. |
+| `autoDownload` | Auto-downloads media from links. |
+
+### 👥 Default Group Settings (`defaultGroupSettings`)
+
+Applied to **new** groups. Existing groups keep their own per-group settings (changed via in-chat commands).
+
+| Key | Default | Effect when ON |
+|---|---|---|
+| `antilink` | `false` | Deletes/kicks on link posting (action: `antilinkAction` → `'delete'`, `'kick'`, `'warn'`) |
+| `antitag` | `false` | Action on @everyone-style tags (action: `antitagAction`) |
+| `antiall` | `false` | **Owner only** — blocks all messages from non-admins |
+| `antiviewonce` | `false` | Reveals view-once media |
+| `antibot` | `false` | Removes other bots from group |
+| `anticall` | `false` | Auto-rejects voice/video calls |
+| `antigroupmention` | `false` | Action on group-link mentions (action: `antigroupmentionAction`) |
+| `welcome` | `false` | Sends welcome message (text: `welcomeMessage`) |
+| `goodbye` | `false` | Sends goodbye message (text: `goodbyeMessage`) |
+| `antiSpam` | `false` | Spam flood protection |
+| `antidelete` | `false` | Resends deleted messages |
+| `nsfw` | `false` | Allows NSFW commands in group |
+| `detect` | `false` | Detects group setting changes (name/icon/desc) |
+| `chatbot` | `false` | AI chatbot replies to every message |
+| `autosticker` | `false` | Group-level auto-sticker |
+
+### 💬 Reply Messages (`messages`)
+
+Customize the bot's standard reply texts:
+
+| Key | Default |
+|---|---|
+| `wait` | `⏳ Please wait...` |
+| `success` | `✅ Success!` |
+| `error` | `❌ Error occurred!` |
+| `ownerOnly` | `👑 This command is only for bot owner!` |
+| `adminOnly` | `🛡️ This command is only for group admins!` |
+| `groupOnly` | `👥 This command can only be used in groups!` |
+| `privateOnly` | `💬 This command can only be used in private chat!` |
+| `botAdminNeeded` | `🤖 Bot needs to be admin to execute this command!` |
+| `invalidCommand` | `❓ Invalid command! Type .menu for help` |
+
+### 🔑 API Keys block (`apiKeys`)
+
+```js
+apiKeys: { openai: '', deepai: '', remove_bg: '' }
+```
+
+> Leave these empty. **Use env variables instead** (`OPENAI_API_KEY`, `GEMINI_API_KEY`) — safer and won't leak in the GitHub repo.
+
+---
+
 ## 🚂 Deploy to Railway (Recommended)
 
 Railway is the easiest host — free 500 hours/month, auto-deploys from GitHub on every push.
