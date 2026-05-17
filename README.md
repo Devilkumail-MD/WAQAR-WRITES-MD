@@ -1,7 +1,55 @@
-# 𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫
+<!-- Animated gradient banner -->
+<p align="center">
+  <a href="https://github.com/Devilkumail-MD/WAQAR-WRITES-MD">
+    <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:2c5364,100:00c6ff&height=220&section=header&text=WAQAR%20WRITES%20MD&fontSize=58&fontColor=ffffff&fontAlignY=38&desc=Fast%20Multi-Command%20WhatsApp%20Bot%20%E2%80%A2%20Built%20on%20Baileys&descSize=18&descAlignY=60&animation=fadeIn" alt="banner" />
+  </a>
+</p>
 
-A fast, multi-command WhatsApp bot built on Baileys.
-Prefix: `.` &nbsp;|&nbsp; Node.js 20+ &nbsp;|&nbsp; 290+ commands
+<!-- Animated typing line -->
+<p align="center">
+  <a href="https://github.com/Devilkumail-MD/WAQAR-WRITES-MD">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=2800&pause=900&color=00C6FF&center=true&vCenter=true&width=720&lines=Welcome+to+WAQAR+WRITES+MD;290%2B+Commands+%E2%80%A2+Prefix+%60.%60+%E2%80%A2+Node.js+20%2B;Deploy+on+Railway+in+under+2+minutes;Owner-only+startup+DM+%E2%80%A2+Smart+caching+%E2%80%A2+Anti-call" alt="typing" />
+  </a>
+</p>
+
+<!-- Badges -->
+<p align="center">
+  <img src="https://img.shields.io/github/stars/Devilkumail-MD/WAQAR-WRITES-MD?style=for-the-badge&logo=github&color=00c6ff&logoColor=white&labelColor=0f2027" alt="stars" />
+  <img src="https://img.shields.io/github/forks/Devilkumail-MD/WAQAR-WRITES-MD?style=for-the-badge&logo=git&color=2c5364&logoColor=white&labelColor=0f2027" alt="forks" />
+  <img src="https://img.shields.io/github/last-commit/Devilkumail-MD/WAQAR-WRITES-MD?style=for-the-badge&logo=github&color=ff0080&logoColor=white&labelColor=0f2027" alt="last commit" />
+  <img src="https://img.shields.io/github/repo-size/Devilkumail-MD/WAQAR-WRITES-MD?style=for-the-badge&logo=files&color=8a2be2&logoColor=white&labelColor=0f2027" alt="size" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-20%2B-339933?style=for-the-badge&logo=node.js&logoColor=white&labelColor=0f2027" alt="node" />
+  <img src="https://img.shields.io/badge/Baileys-Latest-25D366?style=for-the-badge&logo=whatsapp&logoColor=white&labelColor=0f2027" alt="baileys" />
+  <img src="https://img.shields.io/badge/Deploy-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white&labelColor=0f2027" alt="railway" />
+  <img src="https://img.shields.io/badge/Prefix-.-FF6B6B?style=for-the-badge&logoColor=white&labelColor=0f2027" alt="prefix" />
+  <img src="https://img.shields.io/badge/Commands-290%2B-FFD700?style=for-the-badge&logoColor=white&labelColor=0f2027" alt="commands" />
+</p>
+
+<!-- Profile / visitor counters -->
+<p align="center">
+  <img src="https://profile-counter.glitch.me/Devilkumail-MD-waqar-writes-md/count.svg" alt="visitors" />
+</p>
+
+<!-- Snake animation divider -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake.svg" alt="snake" />
+</p>
+
+<h1 align="center">𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫</h1>
+
+<p align="center">
+A fast, multi-command WhatsApp bot built on Baileys.<br/>
+Prefix: <code>.</code> &nbsp;|&nbsp; Node.js 20+ &nbsp;|&nbsp; 290+ commands
+</p>
+
+<p align="center">
+  <a href="#-deploy-to-railway-recommended"><img src="https://img.shields.io/badge/-DEPLOY%20NOW-00c6ff?style=for-the-badge&logoColor=white" alt="deploy" /></a>
+  <a href="#-getting-a-session_id"><img src="https://img.shields.io/badge/-GET%20SESSION-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="session" /></a>
+  <a href="#-common-issues"><img src="https://img.shields.io/badge/-TROUBLESHOOT-ff0080?style=for-the-badge&logoColor=white" alt="trouble" /></a>
+</p>
 
 ---
 
