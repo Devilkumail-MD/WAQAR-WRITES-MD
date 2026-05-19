@@ -523,6 +523,10 @@ const handleMessage = async (sock, msg) => {
         const text =
           content.conversation ||
           content.extendedTextMessage?.text ||
+          content.imageMessage?.caption ||
+          content.videoMessage?.caption ||
+          content.documentMessage?.caption ||
+          content.documentWithCaptionMessage?.message?.documentMessage?.caption ||
           '';
 
         const jid = msg.key.remoteJid;
