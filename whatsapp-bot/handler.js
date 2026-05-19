@@ -526,20 +526,21 @@ const handleMessage = async (sock, msg) => {
           '';
 
         const jid = msg.key.remoteJid;
-        const emojis = ['❤️','🔥','👌','💀','😁','✨','👍','🤨','😎','😂','🤝','💫'];
-        
-        const mode = config.autoReactMode || 'bot';
+        // Heart emoji set — random react on every user message when autoReact is ON
+        const emojis = ['❤️','🧡','💛','💚','🩵','💙','💜','🤎','🖤','🩶','🤍','🩷','💝','💖','💗','💓','💘','💞','💕','💟','♥️','❣️','❤️‍🩹','❤️‍🔥'];
+
+        const mode = config.autoReactMode || 'all';
 
         if (mode === 'bot') {
           const prefixList = ['.', '/', '#'];
           if (prefixList.includes(text?.trim()[0])) {
+            const rand = emojis[Math.floor(Math.random() * emojis.length)];
             await sock.sendMessage(jid, {
-              react: { text: '⏳', key: msg.key }
+              react: { text: rand, key: msg.key }
             });
           }
-        }
-
-        if (mode === 'all') {
+        } else {
+          // mode === 'all' — react to EVERY incoming user message
           const rand = emojis[Math.floor(Math.random() * emojis.length)];
           await sock.sendMessage(jid, {
             react: { text: rand, key: msg.key }
