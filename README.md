@@ -62,6 +62,7 @@ These are the **only** variables the bot reads. Anything else is unused — don'
 | Variable | Description | Example |
 |---|---|---|
 | `SESSION_ID` | Your WAQAR WRITES session string. Pair your number at the session generator and paste the **full** string. | `WAQAR-WRITES~ABC123xyz...` |
+| `SESSION_GEN_URL` | Custom session-generator URL (only if you self-host it) | default: `https://waqar-writes-md.replit.app/session/` |
 
 ### 🟡 RECOMMENDED (set on every host)
 
@@ -75,12 +76,6 @@ These are the **only** variables the bot reads. Anything else is unused — don'
 |---|---|---|
 | `GEMINI_API_KEY` | `.gemini` AI chat | [ai.google.dev](https://ai.google.dev) (free tier) |
 | `OPENAI_API_KEY` | `.gpt` AI chat | [platform.openai.com](https://platform.openai.com) |
-| `SESSION_GEN_URL` | Custom session-generator URL (only if you self-host it) | default: `https://waqar-writes-md.replit.app/session/` |
-| `UPDATE_ZIP_URL` | Source ZIP for the `.update` owner command | default: GitHub repo |
-| `YTDLP_BIN` | Custom path to `yt-dlp` binary for `.song` / `.video` | default: `yt-dlp` (auto-detect) |
-
-> **Owner numbers** are hard-coded in `whatsapp-bot/config.js` — **not** env vars. Edit that file and redeploy to change them.
-
 ---
 
 ## ⚙️ `whatsapp-bot/config.js` — All Settings
@@ -91,14 +86,9 @@ Anything that is **not** an env variable lives in [`whatsapp-bot/config.js`](./w
 
 | Key | Current value | What it does |
 |---|---|---|
-| `ownerNumber` | `['923375626980','447520643901']` | Owner numbers (no `+`, no spaces). Both get the startup DM and owner-only commands. |
-| `ownerName` | `['𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫', '𝙳𝙴𝚅𝙸𝙻 𝚇']` | Display names for each owner (same order as `ownerNumber`). |
-| `botName` | `𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫` | Bot name shown in menus / replies. |
-| `prefix` | `.` | Command prefix. Change to `!`, `/`, `#`, etc. if you want. |
-| `sessionName` | `session` | Local session folder name. |
-| `packname` | `𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫` | Sticker pack name (shown in WhatsApp sticker info). |
-| `timezone` | `Asia/Karachi` | Timezone for `.time`, logs, and timestamps. |
-| `maxWarnings` | `3` | Warnings before a user gets actioned (antilink/antitag etc). |
+| `ownerNumber` | `['your number']` | Owner numbers (no `+`, no spaces). Both get the startup DM and owner-only commands. |
+| `ownerName` | `['your name']` | Display names for each owner (same order as `ownerNumber`). |
+| `prefix` | `your prefix like (+,.!)` | Command prefix. Change to `!`, `/`, `#`, etc. if you want. |
 
 ### 🔗 Links
 
@@ -106,10 +96,6 @@ Anything that is **not** an env variable lives in [`whatsapp-bot/config.js`](./w
 |---|---|---|
 | `sessionGenUrl` | `https://waqar-writes-md.replit.app/session/` | Session generator URL. Env `SESSION_GEN_URL` overrides this. |
 | `updateZipUrl` | `https://github.com` | ZIP source for `.update`. Env `UPDATE_ZIP_URL` overrides this. |
-| `newsletterJid` | `120363424512151830@newsletter` | WhatsApp channel JID used for menu forwarding. |
-| `social.github` | `https://github.com` | Shown in `.owner` / `.info`. |
-| `social.instagram` | `https://instagram.com` | Shown in `.owner` / `.info`. |
-| `social.youtube` | `http://youtube.com/@devilxofficial_hackers` | Shown in `.owner` / `.info`. |
 
 ### 🤖 Bot Behavior (toggles, default = OFF)
 
@@ -146,43 +132,7 @@ Applied to **new** groups. Existing groups keep their own per-group settings (ch
 | `chatbot` | `false` | AI chatbot replies to every message |
 | `autosticker` | `false` | Group-level auto-sticker |
 
-### 💬 Reply Messages (`messages`)
-
-Customize the bot's standard reply texts:
-
-| Key | Default |
-|---|---|
-| `wait` | `⏳ Please wait...` |
-| `success` | `✅ Success!` |
-| `error` | `❌ Error occurred!` |
-| `ownerOnly` | `👑 This command is only for bot owner!` |
-| `adminOnly` | `🛡️ This command is only for group admins!` |
-| `groupOnly` | `👥 This command can only be used in groups!` |
-| `privateOnly` | `💬 This command can only be used in private chat!` |
-| `botAdminNeeded` | `🤖 Bot needs to be admin to execute this command!` |
-| `invalidCommand` | `❓ Invalid command! Type .menu for help` |
-
-### 🔑 API Keys block (`apiKeys`)
-
-```js
-apiKeys: { openai: '', deepai: '', remove_bg: '' }
-```
-
-> Leave these empty. **Use env variables instead** (`OPENAI_API_KEY`, `GEMINI_API_KEY`) — safer and won't leak in the GitHub repo.
-
 ---
-
-## 🚂 Deploy to Railway (Recommended)
-
-Railway is the easiest host — free 500 hours/month, auto-deploys from GitHub on every push.
-
-### Step-by-step:
-
-1. **Fork or import this repo** to your GitHub.
-2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → pick this repo.
-3. Railway auto-detects Node.js. It reads `whatsapp-bot/railway.json` + `whatsapp-bot/nixpacks.toml` (Node 20 + ffmpeg + libwebp already configured).
-4. After first deploy fails (no SESSION_ID yet), go to **Variables** tab and add:
-
    ```
    SESSION_ID = WAQAR-WRITES~<your_full_session_string>
    NODE_ENV   = production
@@ -219,7 +169,7 @@ Railway's free tier sleeps idle services. Two options:
 
 1. Visit the session generator: **<https://waqar-writes-md.replit.app/session/>**
 2. Choose **Pair Code** method.
-3. Enter your bot's WhatsApp number (digits only, with country code, e.g. `447520643901`).
+3. Enter your bot's WhatsApp number (digits only, with country code, e.g. `923012345678`).
 4. On your phone: **WhatsApp → Linked Devices → Link a Device → Link with phone number** → enter the 8-digit code shown.
 5. Wait ~10 seconds. The page will show a string starting with `WAQAR-WRITES~......`.
 6. Copy the **whole string** and paste it into Railway's `SESSION_ID` variable.
@@ -250,65 +200,5 @@ node index.js
 
 ---
 
-## 👑 Owner Numbers
-
-Hard-coded in `whatsapp-bot/config.js`:
-
-```js
-ownerNumber: ['923375626980', '447520643901'],
-ownerName:   ['𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫', '𝙳𝙴𝚅𝙸𝙻 𝚇'],
-```
-
-Edit and push to change. Owners get the start-up DM and can use owner-only commands (`.mode`, `.setbotname`, `.update`, etc.).
-
----
-
-## 🆘 Common Issues
-
-| Symptom | Fix |
-|---|---|
-| `Connection Failure` on boot | Wait 5–10 sec — Baileys reconnects. If it loops, your `SESSION_ID` is invalid → regenerate. |
-| `SESSION_ID is not defined` | Env var not set on host. Add it in Railway → Variables. |
-| Bot connects but commands don't reply | Use the prefix `.` (e.g. `.menu`, `.ping`). Also check Railway region. |
-| Commands respond **slowly** (>3 sec) | Railway region is far from you. Switch to Singapore or Frankfurt. |
-| `Connection closed: Stream Errored (conflict)` | Same `SESSION_ID` is running somewhere else — stop the other instance OR generate a fresh session. |
-| `.song` / `.video` fails | Host missing `yt-dlp` or `ffmpeg`. Railway/Heroku configs in repo already include them. |
-| Old log text "KnightBot Session" still showing | Railway hasn't auto-redeployed. Go to Deployments tab → click latest commit → **Redeploy**. |
-
----
-
-## 📁 Repo Structure
-
-```
-WAQAR-WRITES-MD/
-├── whatsapp-bot/             # ← the bot
-│   ├── index.js              # entry point (obfuscated)
-│   ├── handler.js            # message handler (optimized hot path)
-│   ├── config.js             # bot config + owner numbers
-│   ├── commands/             # 290+ commands (obfuscated)
-│   │   ├── admin/
-│   │   ├── ai/
-│   │   ├── downloader/
-│   │   ├── fun/
-│   │   ├── general/
-│   │   ├── group/
-│   │   ├── owner/
-│   │   ├── search/
-│   │   └── sticker/
-│   ├── utils/                # shared helpers (plain)
-│   ├── railway.json          # Railway build config
-│   ├── nixpacks.toml         # Railway runtime packages (ffmpeg, etc.)
-│   └── DEPLOY.md             # full deploy guide
-└── README.md                 # ← you are here
-```
-
----
-
-## 🛡️ Code Protection
-
-`index.js` and all command files are obfuscated to deter casual copying.
-**No** anti-debug, **no** anti-tamper — won't break on minor edits or reformatting. Safe to run on any standard Node.js 20+ environment.
-
----
 
 > ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫 &nbsp;|&nbsp; Author: [Devilkumail-MD](https://github.com/Devilkumail-MD)
