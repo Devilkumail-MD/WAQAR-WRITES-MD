@@ -87,4 +87,16 @@ module.exports = {
       youtube: 'http://youtube.com/@devilxofficial_hackers'
     }
 };
-  
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PERMANENT BOT IDENTITY
+// botName is locked. It CANNOT be overridden by an environment variable, by any
+// in-bot command, or by any runtime mutation. Any attempt to reassign it will
+// be silently ignored (or throw in strict mode). Do not remove this block.
+// ─────────────────────────────────────────────────────────────────────────────
+Object.defineProperty(module.exports, 'botName', {
+  value: '𝑾𝑨𝑸𝑨𝑹 𝑾𝑹𝑰𝑻𝑬𝑺 𝑴𝑫',
+  writable: false,
+  configurable: false,
+  enumerable: true,
+});
