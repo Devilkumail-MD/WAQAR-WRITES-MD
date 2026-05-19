@@ -72,15 +72,18 @@ module.exports = {
       return ctx.reply('❌ Iss message me koi media nahi mila. Kisi media (image/video/audio/sticker/doc) pe reply karo.');
     }
 
-    // Build a pseudo-msg for downloadMediaMessage
+    // Build a pseudo-msg for downloadMediaMessage.
+    // For status broadcasts, ctxInfo.remoteJid will be 'status@broadcast' — use it so
+    // baileys downloads the media from the correct source.
     const stanzaId = ctxInfo.stanzaId || ctxInfo.stanzaID;
-    const participant = ctxInfo.participant || ctxInfo.remoteJid || from;
+    const quotedRemote = ctxInfo.remoteJid || from;
+    const quotedParticipant = ctxInfo.participant || (from.endsWith('@g.us') ? undefined : from);
     const fakeMsg = {
       key: {
-        remoteJid: from,
+        remoteJid: quotedRemote,
         fromMe: false,
         id: stanzaId,
-        participant,
+        participant: quotedParticipant,
       },
       message: quoted,
     };
